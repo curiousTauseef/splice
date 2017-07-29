@@ -1,0 +1,68 @@
+extends _layout
+
+block content
+  .container
+    form.form(action='/', method='post')
+     h1 Splice Site QGRS Finder
+     .alert.alert-info
+      .row: .col.col-xs-12: ul 
+        li This site lets you search for QGRS near (within 100nt up or downstream) splice sites.  
+        li All search results represent a single QGRS. Each result is the best QGRS representation among all overlapping motifs.
+        li Only QGRS with 3+ tetrads are reported.  
+        li Only human genes are contained in the database.
+        li There are a total of 32,085 QGRS in the database, which were found among 211,534 splice sites in build 38 of NCBI's human genome data.
+    
+     .alert.alert-warning
+       p
+        | Please note, this site is only for basic demonstration purposes.  To use this data to do more advanced analysis, please download the raw 
+        a(href="/splice.json.zip") JSON file 
+        | containing all splice site data.
+       
+     h2 Search Parameters
+     .form-group
+      label Gene
+      input.form-control(type='text', name='gene', value=(q.gene), placeholder='Gene ID or Gene names, seperated by semicolons')
+     .row
+      .col.col-xs-6
+       .form-group
+        label G-Quadruplex
+        select.form-control(name="qgrs", value=q.qgrs)
+            option(value="present", selected=q.qgrs=='present') Present
+            option(value="downstream", selected=q.qgrs=='downstream') Present - downstream
+            option(value="upstream", selected=q.qgrs=='upstream') Present - upstream
+      .col.col-xs-6
+       .form-group
+        label Alternative Splicing
+        select.form-control(name="altSplice", value=q.altSplice)
+            option(value="yes", selected=q.altSplice=='yes') Yes
+            option(value="no", selected=q.altSplice=='no') No
+            option(value="either", selected=q.altSplice=='either') Either
+     .form-group
+      button.btn.btn-primary(type="submit") Search
+    if qgrs
+     .row
+      .col.col-xs-12
+        h2 Search Results
+        p #{qgrs.length} QGRS matched
+        table.table
+         thead
+          tr 
+           th Chromosome
+           th Gene ID
+           th Gene Name
+           th(title='Position on chromosome of exon start') Splice site 
+           th(title='QGRS position relative to exon start') QGRS position
+           th QGRS Tetrads
+           th QGRS G-Score
+           th Alt. Spliced
+         tbody
+          each q in qgrs 
+           tr 
+            td #{q.chromosome}
+            td #{q.gene_id} 
+            td #{q.gene_name}
+            td #{q.locus}
+            td #{q.qgrs.start}
+            td #{q.qgrs.tetrads}
+            td #{q.qgrs.gscore}
+            td #{q.is_alt_spliced}
