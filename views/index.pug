@@ -9,9 +9,7 @@ block content
         li This site lets you search for QGRS near (within 100nt up or downstream) splice sites.  
         li All search results represent a single QGRS. Each result is the best QGRS representation among all overlapping motifs.
         li Only QGRS with 3+ tetrads are reported.  
-        li Only human genes are contained in the database.
-        li There are a total of 32,085 QGRS in the database, which were found among 211,534 splice sites in build 38 of NCBI's human genome data.
-    
+        
      .alert.alert-warning
        p
         | Please note, this site is only for basic demonstration purposes.  To use this data to do more advanced analysis, please download the raw 
@@ -19,6 +17,14 @@ block content
         | containing all splice site data.
        
      h2 Search Parameters
+     .form-group
+      label Organism
+      select.form-control(name='organism', value=(q.organism))
+        option(value="") Any
+        option(value="Homo sapiens") Human
+        option(value="Mus musculus") Mouse
+        
+     
      .form-group
       label Gene
       input.form-control(type='text', name='gene', value=(q.gene), placeholder='Gene ID or Gene names, seperated by semicolons')
@@ -47,6 +53,7 @@ block content
         table.table
          thead
           tr 
+           th Organism
            th Chromosome
            th Gene ID
            th Gene Name
@@ -58,6 +65,7 @@ block content
          tbody
           each q in qgrs 
            tr 
+            td #{q.organism}
             td #{q.chromosome}
             td #{q.gene_id} 
             td #{q.gene_name}

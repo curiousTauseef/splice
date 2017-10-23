@@ -25,8 +25,6 @@ router.get("/", function (req, res) {
 router.post("/", function (req, res) {
     var splice_match = {}
     req.session.q = req.body;
-    console.log(req.session.q);
-    console.log(req.body);
     if (req.body.altSplice == 'yes') {
         splice_match = {
             is_alt_spliced: true
@@ -58,6 +56,11 @@ router.post("/", function (req, res) {
     var matches = []
     matches.push(gene_match);
     matches.push(splice_match);
+    if (req.body.organism) {
+        matches.push({
+            organism: req.body.organism.trim()
+        })
+    }
 
     var unwind = {
         $unwind: 'qgrs'
